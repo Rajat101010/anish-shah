@@ -61,8 +61,8 @@ model Review {
 
 model SiteContent {
   id             String   @id @default("main")
-  siteTitle      String   @default("Fade & Forge")
-  name           String   @default("Fade & Forge")
+  siteTitle      String   @default("Anish Shah")
+  name           String   @default("Anish Shah")
   tagline        String   @default("Premium barber services")
   bio            String   @default("Sharp cuts. Clean looks. Better you.")
   profilePhoto   String?
@@ -71,7 +71,7 @@ model SiteContent {
   services       Json
   hours          Json
   social         Json
-  seoTitle       String   @default("Fade & Forge | Premium Barber")
+  seoTitle       String   @default("Anish Shah | Premium Barber")
   seoDescription String   @default("Book a premium haircut, beard trim, or shave.")
   accentColor    String   @default("#e7b94f")
   updatedAt      DateTime @updatedAt
