@@ -1,0 +1,3 @@
+import {isAdmin} from "@/lib/auth";import {redirect} from "next/navigation";import {db} from "@/lib/db";import {BookingManager} from "@/components/booking-manager";
+export const dynamic="force-dynamic";
+export default async function BookingsAdmin(){if(!(await isAdmin()))redirect("/admin");let links:any[]=[];try{links=await db.bookingLink.findMany({orderBy:{order:"asc"}})}catch{}return <main className="container min-h-[75vh] py-10"><a className="muted underline" href="/admin">← Dashboard</a><h1 className="my-5 text-4xl font-black">Booking links</h1><BookingManager initial={JSON.parse(JSON.stringify(links))}/></main>}

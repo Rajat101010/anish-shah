@@ -1,0 +1,6 @@
+ "use client";
+import { useState } from "react";
+export function AdminLogin(){const [email,setEmail]=useState(""),[password,setPassword]=useState(""),[error,setError]=useState("");
+ async function submit(e:React.FormEvent){e.preventDefault();setError("");const r=await fetch("/api/admin/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email,password})});if(r.ok)location.reload();else setError("Login failed. Check your credentials.");}
+ return <form onSubmit={submit} className="panel w-full max-w-md p-7"><p className="gold mb-2 text-xs font-bold uppercase tracking-[.3em]">Restricted access</p><h1 className="mb-6 text-3xl font-black">Admin login</h1><label className="mb-2 block text-sm">Email</label><input className="field mb-4" type="email" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)}/><label className="mb-2 block text-sm">Password</label><input className="field mb-5" type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/><button className="btn w-full">Sign in</button>{error&&<p className="mt-4 text-sm text-red-300">{error}</p>}</form>
+}

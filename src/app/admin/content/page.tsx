@@ -1,0 +1,3 @@
+import {isAdmin} from "@/lib/auth";import {redirect} from "next/navigation";import {db} from "@/lib/db";import {ContentEditor} from "@/components/content-editor";
+export const dynamic="force-dynamic";
+export default async function ContentAdmin(){if(!(await isAdmin()))redirect("/admin");let content:any=null,location:any=null;try{[content,location]=await Promise.all([db.siteContent.findUnique({where:{id:"main"}}),db.location.findUnique({where:{id:"main"}})])}catch{}return <main className="container min-h-[75vh] py-10"><a className="muted underline" href="/admin">← Dashboard</a><h1 className="my-5 text-4xl font-black">Home, location & settings</h1><ContentEditor initial={JSON.parse(JSON.stringify({content,location}))}/></main>}

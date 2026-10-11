@@ -1,0 +1,3 @@
+import {isAdmin} from "@/lib/auth";import {redirect} from "next/navigation";import {db} from "@/lib/db";import {ReviewManager} from "@/components/review-manager";
+export const dynamic="force-dynamic";
+export default async function ReviewsAdmin(){if(!(await isAdmin()))redirect("/admin");const reviews=await db.review.findMany({orderBy:{createdAt:"desc"},take:200});return <main className="container min-h-[75vh] py-10"><a className="muted underline" href="/admin">← Dashboard</a><h1 className="my-5 text-4xl font-black">Review moderation</h1><ReviewManager initial={JSON.parse(JSON.stringify(reviews))}/></main>}

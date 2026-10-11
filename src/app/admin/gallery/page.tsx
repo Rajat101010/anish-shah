@@ -1,0 +1,3 @@
+import {isAdmin} from "@/lib/auth";import {redirect} from "next/navigation";import {db} from "@/lib/db";import {GalleryAdmin} from "@/components/gallery-admin";
+export const dynamic="force-dynamic";
+export default async function GalleryAdminPage(){if(!(await isAdmin()))redirect("/admin");let posts:any[]=[];try{posts=await db.post.findMany({orderBy:{createdAt:"desc"}})}catch{}return <main className="container min-h-[75vh] py-10"><a className="muted text-sm underline" href="/admin">← Dashboard</a><h1 className="mb-6 mt-3 text-4xl font-black">Gallery manager</h1><GalleryAdmin posts={JSON.parse(JSON.stringify(posts))}/></main>}

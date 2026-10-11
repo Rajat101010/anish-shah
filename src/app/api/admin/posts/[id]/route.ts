@@ -1,0 +1,2 @@
+import {NextRequest,NextResponse} from "next/server";import {isAdmin} from "@/lib/auth";import {db} from "@/lib/db";
+export async function DELETE(_:NextRequest,{params}:{params:Promise<{id:string}>}){if(!(await isAdmin()))return NextResponse.json({error:"Unauthorized"},{status:401});try{const {id}=await params;await db.post.delete({where:{id}});return NextResponse.json({ok:true})}catch{return NextResponse.json({error:"Unable to delete post"},{status:500})}}

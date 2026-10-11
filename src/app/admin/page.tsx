@@ -1,0 +1,13 @@
+import { redirect } from "next/navigation";
+import { isAdmin } from "@/lib/auth";
+import { db } from "@/lib/db";
+import Link from "next/link";
+import { AdminLogin } from "@/components/admin-login";
+export const dynamic="force-dynamic";
+export default async function Admin(){
+ if(!(await isAdmin()))return <main className="container grid min-h-[80vh] place-items-center py-12"><AdminLogin/></main>;
+ let posts=0,likes=0,comments=0,pending=0,approved:any[]=[];
+ try{[posts,likes,comments,pending,approved]=await Promise.all([db.post.count(),db.like.count(),db.comment.count(),db.review.count({where:{status:"PENDING"}}),db.review.findMany({where:{status:"APPROVED"}})])}catch{}
+ const avg=approved.length?approved.reduce((s,r)=>s+r.rating,0)/approved.length:0;
+ return <main className="container min-h-[80vh] py-10"><div className="mb-8 flex flex-wrap items-center justify-between gap-3"><div><p className="gold text-xs font-bold uppercase tracking-[.3em]">Control room</p><h1 className="mt-2 text-4xl font-black">Admin dashboard</h1></div><form action="/api/admin/logout" method="post"><button className="btn-outline">Log out</button></form></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">{[["Total posts",posts],["Total likes",likes],["Comments",comments],["Pending reviews",pending],["Average rating",avg.toFixed(1)+" ★"]].map(([k,v])=><div className="panel p-5" key={String(k)}><p className="muted text-sm">{k}</p><p className="mt-3 text-3xl font-black gold">{v}</p></div>)}</div><h2 className="mb-4 mt-10 text-2xl font-black">Manage your site</h2><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{[["Gallery manager","Upload, pin, edit and delete gallery posts","/admin/gallery"],["Home & About editor","Edit your public-facing profile and services","/admin/content"],["Review moderation","Approve or remove customer feedback","/admin/reviews"],["Booking links","Manage booking methods and external links","/admin/bookings"],["Location & hours","Manage address, phone, hours and map URL","/admin/content"],["Settings","SEO and appearance configuration","/admin/content"]].map(x=><Link className="panel p-5 transition hover:border-[#e7b94f]" href={x[2]} key={x[0]}><h3 className="font-bold">{x[0]} ↗</h3><p className="muted mt-2 text-sm">{x[1]}</p></Link>)}</div><p className="muted mt-8 text-sm">Protected admin tools require a valid signed session. Use the seeded admin account to sign in.</p></main>
+}
